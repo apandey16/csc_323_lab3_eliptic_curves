@@ -2,6 +2,7 @@ import math
 
 class point:
     def __init__(self, x, y, origin=False):
+        self.origin = origin
         if self.origin is False:
             self.x = x
             self.y = y
@@ -20,30 +21,36 @@ class point:
         else:
             return(self.x == other.x and self.y == -1 * other.y)
     
+    def __str__(self):
+        if self.origin:
+            return "O"
+        else:
+            return f"({self.x}, {self.y})"
+    
 
-def calcSlope( p1, p2 ):
-    return (p2.y - p1.y)/(p2.x - p1.x)
+def calcSlope( p1, p2, F ):
+    return (p2.y - p1.y) * pow((p2.x - p1.x), -1, F)
 
 def intersectionPoint (p1, p2, F):
-    m = calcSlope(p1, p2)
+    m = pow(calcSlope(p1, p2, F), F)
 
-    retX = m^2 - p2.x - p1.x
-    retY = p2.y + m(retX - p2.x)
+    retX = pow(m, 2, F) - p2.x - p1.x
+    retY = pow(m * (p1.x - retX) - p1.y, 1, F)
 
     return point(pow(retX, 1,  F), pow(retY, 1, F))
 
-def tanSlope(p, A):
-    return (3 * p.x^2 + A) / (2 * p.y)
+def tanSlope(p, A, F):
+    return pow((3 *  pow(p.x, 2, F) + A), 1, F) * pow((2 * p.y), -1, F)
 
 def intersectionPointTangent(p1, p2, A, F):
-    m = tanSlope(p1, A)
+    m = pow(tanSlope(p1, A, F), 1, F)
 
-    retX = m^2 - p2.x - p1.x
-    retY = p2.y + m(retX - p2.x)
+    retX = pow(m, 2, F) - p2.x - p1.x
+    retY = pow(m*(p2.x - retX) -p2.y, 1, F)
 
     return point(pow(retX, 1,  F), pow(retY, 1, F))
 
-def pointAddition(p1, p2, A, F):
+def pointAddition(p1, p2, A, B, F):
     if p1.origin:
         return p2
     
@@ -57,10 +64,18 @@ def pointAddition(p1, p2, A, F):
 
     elif p1.isInverse(p2):
         # if they are the inverse then return the origin
-        return point(0, 0, True)
+        return point(None, None, True)
+    
+    elif p1.x == p2.x:
+        return point(None, None, True)
     
     else:
         #if they aren't inversese or equal, this is the general case and we need the intersection point
         print("gen case")
         return intersectionPoint(p1, p2, F)
-    
+
+print(pointAddition(point(9,7), point(1,8), 3, 8, 13))
+print()
+print(pointAddition(point(9,7), point(9,7), 3, 8, 13))
+print()
+print(pointAddition(point(12,11), point(12,2), 3, 8, 13))
