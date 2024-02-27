@@ -19,7 +19,8 @@ class point:
         if self.origin or other.origin:
             return self.origin == other.origin
         else:
-            return(self.x == other.x and self.y == -1 * other.y)
+            #might need to add y check later
+            return(self.x == other.x)
     
     def __str__(self):
         if self.origin:
@@ -59,23 +60,20 @@ def pointAddition(p1, p2, A, B, F):
     
     elif p1 == p2:
         # add code for finding the tangent and the thrid point
-        print("equal")
         return intersectionPointTangent(p1, p2, A, F)
 
     elif p1.isInverse(p2):
         # if they are the inverse then return the origin
         return point(None, None, True)
     
-    elif p1.x == p2.x:
-        return point(None, None, True)
-    
     else:
         #if they aren't inversese or equal, this is the general case and we need the intersection point
-        print("gen case")
         return intersectionPoint(p1, p2, F)
 
-print(pointAddition(point(9,7), point(1,8), 3, 8, 13))
-print()
-print(pointAddition(point(9,7), point(9,7), 3, 8, 13))
-print()
-print(pointAddition(point(12,11), point(12,2), 3, 8, 13))
+if __name__ =="__main__":
+
+    print(pointAddition(point(9,7), point(1,8), 3, 8, 13))
+    print()
+    print(pointAddition(point(9,7), point(9,7), 3, 8, 13))
+    print()
+    print(pointAddition(point(12,11), point(12,2), 3, 8, 13))
