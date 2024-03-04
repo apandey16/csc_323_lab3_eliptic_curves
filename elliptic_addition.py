@@ -1,5 +1,4 @@
 from point_class import point
-    
 
 def calcSlope( p1, p2, F ):
     return (p2.y - p1.y) * pow((p2.x - p1.x), -1, F)
