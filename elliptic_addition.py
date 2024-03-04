@@ -1,32 +1,4 @@
-import math
-
-class point:
-    def __init__(self, x, y, origin=False):
-        self.origin = origin
-        if self.origin is False:
-            self.x = x
-            self.y = y
-        else:
-            self.origin = True
-
-    def __eq__(self, value: object) -> bool:
-        if self.origin or value.origin:
-            return self.origin == value.origin
-        else:
-            return(self.x == value.x and self.y == value.y)
-    
-    def isInverse(self, other) -> bool:
-        if self.origin or other.origin:
-            return self.origin == other.origin
-        else:
-            #might need to add y check later
-            return(self.x == other.x)
-    
-    def __str__(self):
-        if self.origin:
-            return "O"
-        else:
-            return f"({self.x}, {self.y})"
+from point_class import point
     
 
 def calcSlope( p1, p2, F ):
