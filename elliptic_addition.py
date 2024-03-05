@@ -1,4 +1,4 @@
-from point_class import point
+from point_class import point, Curve, pointDef
 
 def calcSlope( p1, p2, F ):
     return (p2.y - p1.y) * pow((p2.x - p1.x), -1, F)
@@ -42,9 +42,11 @@ def pointAddition(p1, p2, A, B, F):
         return intersectionPoint(p1, p2, F)
 
 if __name__ =="__main__":
-
-    print(pointAddition(point(9,7), point(1,8), 3, 8, 13))
-    print()
-    print(pointAddition(point(9,7), point(9,7), 3, 8, 13))
-    print()
-    print(pointAddition(point(12,11), point(12,2), 3, 8, 13))
+    curve  = Curve(3, 8, 13)
+    # print(pointAddition(point(9,7), point(9,7),curve))
+    # print(pointAddition(point(9,7), point(1,8), 3, 8, 13))
+    # print()
+    p1 = pointDef(x=9,y=7, curve=curve)
+    print(p1 + p1)
+    # print()
+    # print(pointAddition(point(12,11), point(12,2), 3, 8, 13))

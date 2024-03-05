@@ -1,89 +1,82 @@
-# from elliptic_addition import intersectionPointTangent
+def bits(n):
+    while n:
+        yield n & 1
+        n >>= 1
 
-def calcSlope( p1, p2, F ):
-    return (p2.y - p1.y) * pow((p2.x - p1.x), -1, F)
-
-def intersectionPoint (p1, p2, F):
-    m = pow(calcSlope(p1, p2, F), F)
-
-    retX = pow(m, 2, F) - p2.x - p1.x
-    retY = pow(m * (p1.x - retX) - p1.y, 1, F)
-
-    return point(pow(retX, 1,  F), pow(retY, 1, F))
-
-def tanSlope(p, A, F):
-    return pow((3 *  pow(p.x, 2, F) + A), 1, F) * pow((2 * p.y), -1, F)
-
-def intersectionPointTangent(p1, p2, A, F):
-    m = pow(tanSlope(p1, A, F), 1, F)
-
-    retX = pow(m, 2, F) - p2.x - p1.x
-    retY = pow(m*(p2.x - retX) -p2.y, 1, F)
-
-    return point(pow(retX, 1,  F), pow(retY, 1, F))
-
-class Curve:
-    def __init__(self, a: int, b: int, field: int):
-        self.a = a
-        self.b = b
+class ellipticCurve:
+    def __init__(self, A, B, field):
+        self.A = A
+        self.B = B
         self.field = field
-        
-    def __str__(self):
-        return f"Curve: Y^2 = X^3 + {self.a}X + {self.b} over field {self.field}"
-
-
-class point:
-
-    def __init__(self, x, y, curve, origin=False):
-        self.origin = origin
-        if self.origin is False:
-            self.x = x
-            self.y = y
-            self.curve = curve
-        else:
-            self.origin = True
-            self.curve = curve
-
-
-    def __eq__(self, value: object) -> bool:
-        if self.origin or value.origin:
-            return self.origin == value.origin
-        else:
-            return(self.x == value.x and self.y == value.y)
     
-    def isInverse(self, other) -> bool:
-        if self.origin or other.origin:
-            return self.origin == other.origin
-        else:
-            #might need to add y check later
-            return(self.x == other.x)
+        def __str__(self) -> str:
+            return f"Curve: Y^2 = X^3 + {self.A}X + {self.B} over field {self.field}"
+        
+
+class Point:
+    def __init__(self, curve: ellipticCurve):
+        self.curve = curve
 
     def __add__(self, p):
-        if self.origin:
-            return p
-        elif p.origin:
-            return self
-        elif self == p:
-            return intersectionPointTangent(self, p, self.curve.a, self.curve.field)
-        elif self.isInverse(p):
-            # if they are the inverse then return the origin
-            return point(None, None, True)
-        else:
-            #if they aren't inversese or equal, this is the general case and we need the intersection point
-            return intersectionPoint(self, p, self.curve.field)
-    
-    def __mul__(self, scalar):
-        if type(scalar) != int:
-            raise ValueError("Scalar must be an integer")
-        elif scalar < 0:
-            raise ValueError("Scalar must be a positive integer")
-        else:
-            res = 0
-            while scalar > 0:
-                if scalar % 2 == 1:
-                    res = self + self
+        match self:
+            case originPoint():
+                return p
+            case regularPoint():
+                pass
+            case _:
+                raise TypeError(f"Attempting to add a non-point: {p}")
+        # If we're here, self must be an regularPoint
+        match p:
+            case originPoint():
+                return self
+            case regularPoint():
+                f = self.curve.field
+                if self.x == p.x and pow(self.y + p.y, 1, f) == 0:
+                    return originPoint(self.curve)
+                if self.x == p.x and self.y == p.y:
+                    m = (3 * pow(self.x, 2, f) + self.curve.a) * pow(2 * self.y, -1, f)
+                else:
+                    m = (p.y - self.y) * pow(p.x - self.x, -1, f)
+                m = pow(m, 1, f)
+                nx = pow((pow(m, 2, f) - self.x - p.x), 1, f)
+                ny = pow(m * (self.x - nx) - self.y, 1, f)
+                return regularPoint(self.curve, x=nx, y=ny)
+            case _:
+                raise TypeError(f"Attempting to add a non-point: {p}")
 
-                self = self + self
-                scalar = scalar // 2
-            
-            return res
+    def __mul__(self, scalar: int):
+        if not isinstance(scalar, int):
+            raise TypeError(f"Attempting to multiply a point by a non-int: {scalar = }")
+        if scalar < 0:
+            raise ValueError(f"Attempting to multiply point by a negative value: {scalar = }")
+        res = originPoint(self.curve)
+        p = self
+        for b in bits(scalar):
+            if b:  # odd
+                res += p
+            p = p + p
+        return res
+
+    def __rmul__(self, scalar: int):
+        return self.__mul__(scalar)
+
+
+class originPoint(Point):
+    def __str__(self):
+        return "Origin"
+
+    def is_origin(self):
+        return True
+
+
+class regularPoint(Point):
+    def __init__(self, curve: ellipticCurve, x: int, y: int):
+        super().__init__(curve)
+        self.x = x
+        self.y = y
+
+    def __str__(self):
+        return f"({self.x}, {self.y})"
+
+    def is_origin(self):
+        return False

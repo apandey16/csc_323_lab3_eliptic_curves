@@ -1,4 +1,4 @@
-from point_class import point
+from point_class import point, Curve
 from elliptic_addition import pointAddition
 
 def pointMultiplication(p, A, B, F, scalar):
@@ -17,5 +17,5 @@ def pointMultiplication(p, A, B, F, scalar):
         
         return res
     
-
-print(pointMultiplication(point(9,7), 3, 8, 13, 2))
+curve  = Curve(3, 8, 13)
+print(pointMultiplication(point(9,7, curve, 2)))
