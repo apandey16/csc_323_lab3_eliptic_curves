@@ -1,5 +1,5 @@
 from point_class import point, Curve
-from elliptic_addition import pointAddition
+from csc_323_lab3_eliptic_curves.IGNOREelliptic_addition import pointAddition
 
 def pointMultiplication(p, A, B, F, scalar):
     if type(scalar) != int:
