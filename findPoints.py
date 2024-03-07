@@ -1,7 +1,7 @@
 import random
 from point_class import ellipticCurve, regularPoint
 
-def find_random_point(curve):
+def findRandomPoint(curve):
     p = curve.field
     A = curve.A
     B = curve.B
@@ -58,4 +58,4 @@ def tonelliShanks(n, p):
         R = pow((R * b), 1, p)
         
 
-print(find_random_point(ellipticCurve(1, 1, 17)) )
+# print(find_random_point(ellipticCurve(1, 1, 17)) )

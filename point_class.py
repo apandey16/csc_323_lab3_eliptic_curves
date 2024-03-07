@@ -34,7 +34,7 @@ class Point:
                 if self.x == p.x and pow(self.y + p.y, 1, f) == 0:
                     return originPoint(self.curve)
                 if self.x == p.x and self.y == p.y:
-                    m = (3 * pow(self.x, 2, f) + self.curve.a) * pow(2 * self.y, -1, f)
+                    m = (3 * pow(self.x, 2, f) + self.curve.A) * pow(2 * self.y, -1, f)
                 else:
                     m = (p.y - self.y) * pow(p.x - self.x, -1, f)
                 m = pow(m, 1, f)
@@ -80,3 +80,5 @@ class regularPoint(Point):
 
     def is_origin(self):
         return False
+    
+# print(regularPoint(ellipticCurve(3,8,13),12,11) + regularPoint(ellipticCurve(3,8,13),12,2))
