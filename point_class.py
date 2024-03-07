@@ -1,3 +1,5 @@
+from Crypto.Hash import HMAC, SHA256
+
 def bits(n):
     while n:
         yield n & 1
@@ -80,5 +82,10 @@ class regularPoint(Point):
 
     def is_origin(self):
         return False
+    
+def calculate_hmac(msg: str, key) -> HMAC.HMAC:
+    h = HMAC.new(str(key).encode(), digestmod=SHA256)
+    h.update(msg.encode())
+    return h
     
 # print(regularPoint(ellipticCurve(3,8,13),12,11) + regularPoint(ellipticCurve(3,8,13),12,2))
