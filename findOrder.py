@@ -10,8 +10,8 @@ def findPointWithOrder(curve, q, a):
         if m.is_origin() is not True:
             return m
 
-curve = ellipticCurve(-95051, 118, 233970423115425145524320034830162017933)
-curve_order = 233970423115425145528637034783781621127
-desired_order = 4
-point_with_order = findPointWithOrder(curve, curve_order, desired_order)
-print(point_with_order)
+# curve = ellipticCurve(-95051, 118, 233970423115425145524320034830162017933)
+# curve_order = 233970423115425145528637034783781621127
+# desired_order = 4
+# point_with_order = findPointWithOrder(curve, curve_order, desired_order)
+# print(point_with_order)
